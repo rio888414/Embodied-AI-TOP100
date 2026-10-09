@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>数据管理 · 智元精灵具身智能TOP100合作</title>
+<style>
+:root {
+  --bg: #0A0D12; --surface: #12161D; --surface-2: #171C25; --surface-3: #191E26;
+  --line: #232A36; --line-strong: #303A4A;
+  --text-1: #E8ECF2; --text-2: #B7C0CD; --text-3: #7D8797; --text-4: #566072;
+  --gold: #C9A227; --gold-bright: #E8C95A; --gold-dim: #6E5A1C;
+  --partner: #3FB8C4; --blue: #4A8FD4; --danger: #D45B5B; --ok: #4CAF7D;
+  --radius: 8px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text-1); min-height: 100vh;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-size: 13px;
+}
+.wrap { max-width: 1440px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ---- 登录门 ---- */
+.gate { max-width: 380px; margin: 16vh auto 0; text-align: center; }
+.gate h1 { font-size: 18px; font-weight: 600; letter-spacing: -.2px; margin-bottom: 6px; }
+.gate p { color: var(--text-3); font-size: 12px; margin-bottom: 24px; }
+.gate input {
+  width: 100%; padding: 11px 14px; font-size: 14px; color: var(--text-1);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+  outline: none; text-align: center; letter-spacing: 3px;
+}
+.gate input:focus { border-color: var(--gold-dim); }
+.gate button {
+  width: 100%; margin-top: 12px; padding: 11px; font-size: 13px; font-weight: 600;
+  color: #0A0D12; background: linear-gradient(145deg, #E8C95A, #C9A227);
+  border: none; border-radius: var(--radius); cursor: pointer;
+}
+.gate .err { color: var(--danger); font-size: 12px; margin-top: 10px; min-height: 16px; }
+.gate button:disabled { opacity: .45; cursor: not-allowed; }
+.gate .hint { color: var(--text-4); font-size: 11px; margin-top: 18px; line-height: 1.6; }
+
+/* ---- 编辑器头部 ---- */
+.head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.head h1 { font-size: 16px; font-weight: 600; }
+.head h1 small { color: var(--text-3); font-weight: 400; font-size: 12px; margin-left: 10px; }
+.head .ops { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.btn {
+  padding: 7px 14px; font-size: 12px; border-radius: var(--radius); cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--text-1);
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--line-strong); background: var(--surface-3); }
+.btn.primary { color: #0A0D12; background: linear-gradient(145deg, #E8C95A, #C9A227); border: none; font-weight: 600; }
+.btn.primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn.danger { color: var(--danger); border-color: rgba(212,91,91,.4); }
+.btn.danger:hover { background: rgba(212,91,91,.12); }
+.search {
+  padding: 7px 12px; font-size: 12px; color: var(--text-1); width: 220px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); outline: none;
+}
+.search:focus { border-color: var(--gold-dim); }
+
+/* ---- 状态条 ---- */
+.status {
+  padding: 9px 14px; margin-bottom: 12px; font-size: 12px; border-radius: var(--radius);
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2);
+  display: flex; gap: 8px; align-items: center; min-height: 20px;
+}
+.status.ok { color: var(--ok); border-color: rgba(76,175,125,.35); }
+.status.err { color: var(--danger); border-color: rgba(212,91,91,.4); }
+.status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-4); flex-shrink: 0; }
+.status.ok .dot { background: var(--ok); } .status.err .dot { background: var(--danger); }
+
+/* ---- 表格 ---- */
+.tbl-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1500px; }
+th {
+  font-size: 10.5px; font-weight: 600; color: var(--text-3); letter-spacing: .08em;
+  padding: 10px 10px; text-align: left; background: var(--surface-2);
+  border-bottom: 1px solid var(--line-strong); position: sticky; top: 0; z-index: 2;
+  white-space: nowrap;
+}
+td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:hover { background: rgba(255,255,255,.02); }
+td.idc { color: var(--text-4); font-size: 11px; text-align: center; }
+td input, td select {
+  width: 100%; padding: 5px 8px; font-size: 12px; color: var(--text-1);
+  background: var(--surface-2); border: 1px solid transparent; border-radius: 5px; outline: none;
+  font-family: inherit;
+}
+td input:hover, td select:hover { border-color: var(--line); }
+td input:focus, td select:focus { border-color: var(--gold-dim); background: var(--surface-3); }
+td select { cursor: pointer; }
+td input[type="number"] { text-align: right; }
+tr.dirty td { background: rgba(201,162,39,.05); }
+tr.dirty td:first-child { box-shadow: inset 3px 0 0 var(--gold); }
+tr.saving { opacity: .55; }
+.row-ops { display: flex; gap: 6px; }
+.row-ops .btn { padding: 4px 10px; font-size: 11px; }
+.muted { color: var(--text-4); }
+.footer-note { margin-top: 14px; font-size: 11px; color: var(--text-4); line-height: 1.7; }
+.footer-note b { color: var(--text-3); font-weight: 500; }
+.count { color: var(--text-3); font-size: 11px; }
+
+/* ---- 数据集切换 Tab ---- */
+.ds-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.ds-tab {
+  padding: 8px 18px; font-size: 12.5px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface-2); color: var(--text-2); transition: all .15s;
+}
+.ds-tab:hover { border-color: var(--line-strong); }
+.ds-tab.is-active {
+  color: #0A0D12; background: linear-gradient(145deg, #E8C95A, #C9A227);
+  border-color: transparent; font-weight: 600;
+}
+td textarea {
+  width: 100%; padding: 5px 8px; font-size: 11.5px; line-height: 1.5; color: var(--text-1);
+  background: var(--surface-2); border: 1px solid transparent; border-radius: 5px; outline: none;
+  font-family: inherit; resize: vertical; min-height: 40px;
+}
+td textarea:hover { border-color: var(--line); }
+td textarea:focus { border-color: var(--gold-dim); background: var(--surface-3); }
+</style>
+</head>
+<body>
+
+<!-- 登录门 -->
+<div class="gate" id="gate">
+  <h1>数据管理</h1>
+  <p>智元精灵具身智能TOP100合作 · 编辑后直接写入云端</p>
+  <input type="password" id="passInput" placeholder="访问口令" autocomplete="off">
+  <button id="passBtn">进入编辑</button>
+  <div class="err" id="gateErr"></div>
+  <div class="hint">口令来自本地 <b>admin-config.js</b>（已加入 .gitignore，不进版本库；可复制 admin-config.example.js 创建）。<br>此处为轻量门槛，请勿将本页链接与口令外传。</div>
+</div>
+
+<!-- 编辑器 -->
+<div class="wrap" id="editor" hidden>
+  <div class="head">
+    <h1>数据管理 <small id="headSub">估值榜 · 云端直写</small></h1>
+    <div class="ops">
+      <span class="count" id="countInfo"></span>
+      <input class="search" id="search" type="search" placeholder="搜索公司名…">
+      <button class="btn" id="reloadBtn">刷新</button>
+      <button class="btn" id="addBtn">+ 新增公司</button>
+      <button class="btn primary" id="saveAllBtn" disabled>保存全部修改</button>
+      <a class="btn" href="index.html" target="_blank" rel="noopener">查看前台 ↗</a>
+    </div>
+  </div>
+
+  <div class="ds-tabs">
+    <button class="ds-tab is-active" data-ds="companies">企业估值榜</button>
+    <button class="ds-tab" data-ds="labs">具身LAB排名</button>
+  </div>
+
+  <div class="status" id="status"><span class="dot"></span><span id="statusText">加载中…</span></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <colgroup id="colgroup"></colgroup>
+      <thead id="theadRow"></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer-note">
+    <b>说明</b>：保存后数据直接写入云数据库，前台 <b>index.html</b> 刷新即见（前台优先读云端）。
+    新增记录：填好必填项后点该行保存；数字列留空表示未披露。
+    估值榜：「每日变化」选 NEW 会在前台显示橙色 NEW 标签，「↑ 上升」需同时填上升位数。
+    具身LAB：「发表情况」悬停在前台「论文得分」上显示；「已建联」选「是」会加浅蓝外框，备注悬停可见。
+    新增实验室无需填 ID（自动分配）。<b>删除不可撤销</b>，会二次确认。
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="config.js"></script>
+<script src="admin-config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

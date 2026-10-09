@@ -1,0 +1,12 @@
+{
+  "name": "embodied-ai-funding-radar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "由智元机器人打造的全球具身智能公司融资追踪平台",
+  "scripts": {
+    "dev": "npx --yes serve -l 3000 .",
+    "start": "npx --yes serve -l 3000 ."
+  },
+  "keywords": ["embodied-ai", "humanoid-robot", "funding", "valuation", "agibot"],
+  "license": "MIT"
+}
